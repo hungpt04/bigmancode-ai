@@ -63,15 +63,15 @@ const getBase = (appId: string): Configuration => ({
   mac: {
     category: "public.app-category.developer-tools",
     icon: `resources/icons/icon.icns`,
-    hardenedRuntime: true,
+    hardenedRuntime: !!process.env.CSC_LINK,
     gatekeeperAssess: false,
     entitlements: "resources/entitlements.plist",
     entitlementsInherit: "resources/entitlements.plist",
-    notarize: true,
+    notarize: !!process.env.CSC_LINK,
     target: ["dmg", "zip"],
   },
   dmg: {
-    sign: true,
+    sign: !!process.env.CSC_LINK,
   },
   protocols: {
     name: "OpenCode",
