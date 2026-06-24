@@ -66,6 +66,14 @@ jobs:
             turbo-${{ runner.os }}-${{ hashFiles('turbo.json', '**/package.json') }}-
             turbo-${{ runner.os }}-
 
+      - name: Pre-install Ripgrep on Windows
+        if: runner.os == 'Windows'
+        run: |
+          mkdir -p ~/.cache/opencode/bin
+          curl -L -o ~/.cache/opencode/bin/ripgrep.zip https://github.com/BurntSushi/ripgrep/releases/download/15.1.0/ripgrep-15.1.0-x86_64-pc-windows-msvc.zip
+          unzip -j ~/.cache/opencode/bin/ripgrep.zip '**/rg.exe' -d ~/.cache/opencode/bin/
+          rm ~/.cache/opencode/bin/ripgrep.zip
+
       - name: Run unit tests
         timeout-minutes: 20
         run: GITHUB_ACTIONS=false bun turbo test
