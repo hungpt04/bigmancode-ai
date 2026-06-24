@@ -36,6 +36,9 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: Configure Git longpaths
+        run: git config --global core.longpaths true
+
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
@@ -91,6 +94,9 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: Configure Git longpaths
+        run: git config --global core.longpaths true
+
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
