@@ -24,10 +24,16 @@ const archMap = {
 
 const platform = platformMap[os.platform()] ?? os.platform()
 const arch = archMap[os.arch()] ?? os.arch()
-const name = packageJson.name.replace("-ai", "")
-const base = `${name}-${platform}-${arch}`
-const sourceBinary = platform === "windows" ? `${name}.exe` : name
-const targetBinary = path.join(__dirname, "bin", `${name}.exe`)
+
+const parts = packageJson.name.split("/")
+const scope = parts.length > 1 ? parts[0] : ""
+const pkgName = parts.length > 1 ? parts[1] : parts[0]
+const nameWithoutAi = pkgName.replace("-ai", "")
+const name = nameWithoutAi
+
+const base = scope ? `${scope}/${nameWithoutAi}-${platform}-${arch}` : `${nameWithoutAi}-${platform}-${arch}`
+const sourceBinary = platform === "windows" ? `${nameWithoutAi}.exe` : nameWithoutAi
+const targetBinary = path.join(__dirname, "bin", `${nameWithoutAi}.exe`)
 
 function supportsAvx2() {
   if (arch !== "x64") return false

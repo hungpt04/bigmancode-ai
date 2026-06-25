@@ -46,7 +46,11 @@ function run(target) {
 const envPath = process.env.BIGMANCODE_BIN_PATH || process.env.OPENCODE_BIN_PATH
 
 const pkg = require("../package.json")
-const name = pkg.name.replace("-ai", "")
+const parts = pkg.name.split("/")
+const scope = parts.length > 1 ? parts[0] : ""
+const pkgName = parts.length > 1 ? parts[1] : parts[0]
+const nameWithoutAi = pkgName.replace("-ai", "")
+const name = nameWithoutAi
 
 const scriptPath = fs.realpathSync(__filename)
 const scriptDir = path.dirname(scriptPath)
@@ -72,7 +76,7 @@ let arch = archMap[os.arch()]
 if (!arch) {
   arch = os.arch()
 }
-const base = name + "-" + platform + "-" + arch
+const base = scope ? scope + "/" + name + "-" + platform + "-" + arch : name + "-" + platform + "-" + arch
 const binary = platform === "windows" ? name + ".exe" : name
 
 function supportsAvx2() {

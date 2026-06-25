@@ -47,10 +47,18 @@ async function publish(dir: string, name: string, version: string) {
   }
 }
 
+const owner = process.env.GH_REPO?.split("/")[0]
+const isFork = owner && owner !== "anomalyco"
+const scope = process.env.NPM_SCOPE ? `${process.env.NPM_SCOPE}/` : (isFork ? `@${owner}/` : "")
+
 const binaries: Record<string, string> = {}
 for (const filepath of new Bun.Glob("*/package.json").scanSync({ cwd: "./dist" })) {
-  const pkg = await Bun.file(`./dist/${filepath}`).json()
-  binaries[pkg.name] = pkg.version
+  const binFile = Bun.file(`./dist/${filepath}`)
+  const binPkg = await binFile.json()
+  const scopedBinName = scope + binPkg.name
+  binPkg.name = scopedBinName
+  await binFile.write(JSON.stringify(binPkg, null, 2))
+  binaries[scopedBinName] = binPkg.version
 }
 console.log("binaries", binaries)
 const version = Object.values(binaries)[0]
@@ -78,7 +86,7 @@ await Bun.file(`./dist/${pkg.name}/bin/${pkg.name}.exe`).write(
 await Bun.file(`./dist/${pkg.name}/package.json`).write(
   JSON.stringify(
     {
-      name: pkg.name + "-ai",
+      name: scope + pkg.name + "-ai",
       bin: {
         [pkg.name]: `./bin/${pkg.name}.exe`,
       },
@@ -97,10 +105,15 @@ await Bun.file(`./dist/${pkg.name}/package.json`).write(
 )
 
 for (const [name, binVersion] of Object.entries(binaries)) {
-  await publish(`./dist/${name}`, name, binVersion)
+  const subDirName = name.split("/").pop()!
+  try {
+    await publish(`./dist/${subDirName}`, name, binVersion)
+  } catch (error) {
+    console.error(`Failed to publish binary package ${name}:`, error)
+  }
   await new Promise((resolve) => setTimeout(resolve, 15000))
 }
-await publish(`./dist/${pkg.name}`, `${pkg.name}-ai`, version)
+await publish(`./dist/${pkg.name}`, scope + `${pkg.name}-ai`, version)
 
 const image = "ghcr.io/anomalyco/opencode"
 const platforms = "linux/amd64,linux/arm64"
