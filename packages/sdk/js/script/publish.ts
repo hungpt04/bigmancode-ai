@@ -40,7 +40,9 @@ if (await published(pkg.name, pkg.version)) {
   await Bun.write("package.json", JSON.stringify(pkg, null, 2))
   try {
     await $`bun pm pack`
-    if (!isUpstream) {
+    if (pkg.name.startsWith("@opencode-ai/") && !process.env.GH_REPO?.startsWith("anomalyco/")) {
+      console.log(`already packed ${pkg.name}@${pkg.version} (skipping scoped package publish on fork repository)`)
+    } else if (!isUpstream) {
       console.log(`already packed ${pkg.name}@${pkg.version} (skipping npm publish on fork repository)`)
     } else {
       await $`npm publish *.tgz --tag ${Script.channel} --access public`

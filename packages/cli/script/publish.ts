@@ -17,6 +17,10 @@ async function publish(dir: string, name: string, version: string) {
   if (process.platform !== "win32") await $`chmod -R 755 .`.cwd(dir)
   if (await published(name, version)) return console.log(`already published ${name}@${version}`)
   await $`bun pm pack`.cwd(dir)
+  if (name.startsWith("@opencode-ai/") && !process.env.GH_REPO?.startsWith("anomalyco/")) {
+    console.log(`already packed ${name}@${version} (skipping scoped package publish on fork repository)`)
+    return
+  }
   if (!isUpstream) {
     console.log(`already packed ${name}@${version} (skipping npm publish on fork repository)`)
     return

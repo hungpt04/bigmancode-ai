@@ -22,6 +22,10 @@ async function publish(dir: string, name: string, version: string) {
     return
   }
   await $`bun pm pack`.cwd(dir)
+  if (name.startsWith("@opencode-ai/") && !process.env.GH_REPO?.startsWith("anomalyco/")) {
+    console.log(`already packed ${name}@${version} (skipping scoped package publish on fork repository)`)
+    return
+  }
   if (!isUpstream) {
     console.log(`already packed ${name}@${version} (skipping npm publish on fork repository)`)
     return
