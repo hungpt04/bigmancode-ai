@@ -47,35 +47,24 @@ async function publish(dir: string, name: string, version: string) {
   }
 }
 
-const owner = process.env.GH_REPO?.split("/")[0]
-const isFork = owner && owner !== "anomalyco"
-
-let scope = ""
-if (process.env.NPM_SCOPE) {
-  scope = `${process.env.NPM_SCOPE}/`
-} else if (isFork) {
-  try {
-    const npmUser = (await $`npm whoami`.text()).trim()
-    console.log("NPM User detected:", npmUser)
-    if (npmUser && npmUser !== "undefined" && !npmUser.includes("error")) {
-      scope = `@${npmUser}/`
-    } else {
-      scope = `@${owner}/`
-    }
-  } catch (error) {
-    console.error("Failed to run npm whoami, falling back to owner:", error)
-    scope = `@${owner}/`
-  }
-}
+const allowedBinaries = [
+  "bigmancode-linux-x64",
+  "bigmancode-darwin-x64",
+  "bigmancode-darwin-arm64",
+  "bigmancode-windows-x64"
+]
 
 const binaries: Record<string, string> = {}
 for (const filepath of new Bun.Glob("*/package.json").scanSync({ cwd: "./dist" })) {
   const binFile = Bun.file(`./dist/${filepath}`)
   const binPkg = await binFile.json()
-  const scopedBinName = scope + binPkg.name
-  binPkg.name = scopedBinName
-  await binFile.write(JSON.stringify(binPkg, null, 2))
-  binaries[scopedBinName] = binPkg.version
+  
+  if (!allowedBinaries.includes(binPkg.name)) {
+    console.log(`skipping binary package ${binPkg.name} (not in allowed list)`)
+    continue
+  }
+
+  binaries[binPkg.name] = binPkg.version
 }
 console.log("binaries", binaries)
 const version = Object.values(binaries)[0]
@@ -103,7 +92,7 @@ await Bun.file(`./dist/${pkg.name}/bin/${pkg.name}.exe`).write(
 await Bun.file(`./dist/${pkg.name}/package.json`).write(
   JSON.stringify(
     {
-      name: scope + pkg.name + "-ai",
+      name: pkg.name + "-ai",
       bin: {
         [pkg.name]: `./bin/${pkg.name}.exe`,
       },
@@ -130,7 +119,7 @@ for (const [name, binVersion] of Object.entries(binaries)) {
   }
   await new Promise((resolve) => setTimeout(resolve, 15000))
 }
-await publish(`./dist/${pkg.name}`, scope + `${pkg.name}-ai`, version)
+await publish(`./dist/${pkg.name}`, `${pkg.name}-ai`, version)
 
 const image = "ghcr.io/anomalyco/opencode"
 const platforms = "linux/amd64,linux/arm64"
