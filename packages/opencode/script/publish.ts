@@ -49,7 +49,24 @@ async function publish(dir: string, name: string, version: string) {
 
 const owner = process.env.GH_REPO?.split("/")[0]
 const isFork = owner && owner !== "anomalyco"
-const scope = process.env.NPM_SCOPE ? `${process.env.NPM_SCOPE}/` : (isFork ? `@${owner}/` : "")
+
+let scope = ""
+if (process.env.NPM_SCOPE) {
+  scope = `${process.env.NPM_SCOPE}/`
+} else if (isFork) {
+  try {
+    const npmUser = (await $`npm whoami`.text()).trim()
+    console.log("NPM User detected:", npmUser)
+    if (npmUser && npmUser !== "undefined" && !npmUser.includes("error")) {
+      scope = `@${npmUser}/`
+    } else {
+      scope = `@${owner}/`
+    }
+  } catch (error) {
+    console.error("Failed to run npm whoami, falling back to owner:", error)
+    scope = `@${owner}/`
+  }
+}
 
 const binaries: Record<string, string> = {}
 for (const filepath of new Bun.Glob("*/package.json").scanSync({ cwd: "./dist" })) {
