@@ -6,7 +6,7 @@ import { fileURLToPath } from "url"
 const dir = fileURLToPath(new URL("..", import.meta.url))
 process.chdir(dir)
 
-const isUpstream = process.env.GH_REPO?.startsWith("anomalyco/") ?? false
+const isUpstream = (process.env.GH_REPO?.startsWith("anomalyco/") || !!process.env.NODE_AUTH_TOKEN) ?? false
 
 async function published(name: string, version: string) {
   return (await $`npm view ${name}@${version} version`.nothrow()).exitCode === 0
