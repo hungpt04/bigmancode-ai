@@ -6,6 +6,8 @@ import { fileURLToPath } from "url"
 const dir = fileURLToPath(new URL("..", import.meta.url))
 process.chdir(dir)
 
+const isUpstream = process.env.GH_REPO?.startsWith("anomalyco/") ?? false
+
 async function published(name: string, version: string) {
   return (await $`npm view ${name}@${version} version`.nothrow()).exitCode === 0
 }
@@ -31,7 +33,11 @@ if (await published(pkg.name, pkg.version)) {
   await Bun.write("package.json", JSON.stringify(pkg, null, 2))
   try {
     await $`bun pm pack`
-    await $`npm publish *.tgz --tag ${Script.channel} --access public`
+    if (!isUpstream) {
+      console.log(`already packed ${pkg.name}@${pkg.version} (skipping npm publish on fork repository)`)
+    } else {
+      await $`npm publish *.tgz --tag ${Script.channel} --access public`
+    }
   } finally {
     await Bun.write("package.json", originalText)
   }
