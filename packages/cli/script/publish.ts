@@ -25,7 +25,20 @@ async function publish(dir: string, name: string, version: string) {
     console.log(`already packed ${name}@${version} (skipping npm publish on fork repository)`)
     return
   }
-  await $`npm publish *.tgz --access public --tag ${Script.channel}`.cwd(dir)
+  let attempts = 3
+  while (attempts > 0) {
+    try {
+      await $`npm publish *.tgz --access public --tag ${Script.channel}`.cwd(dir)
+      break
+    } catch (error) {
+      attempts--
+      if (attempts === 0) {
+        throw error
+      }
+      console.warn(`npm publish failed for ${name}, retrying in 30 seconds... (Attempts remaining: ${attempts})`)
+      await new Promise((resolve) => setTimeout(resolve, 30000))
+    }
+  }
 }
 
 const binaries: Record<string, string> = {}
