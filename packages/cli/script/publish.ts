@@ -69,8 +69,23 @@ await Bun.file(`./dist/${pkg.name}/package.json`).write(
   ),
 )
 
+let hasError = false
 for (const [name, binVersion] of Object.entries(binaries)) {
-  await publish(`./dist/${name.replace("@opencode-ai/", "")}`, name, binVersion)
-  await new Promise((resolve) => setTimeout(resolve, 15000))
+  try {
+    await publish(`./dist/${name.replace("@opencode-ai/", "")}`, name, binVersion)
+  } catch (error) {
+    console.error(`Failed to publish binary package ${name}:`, error)
+    hasError = true
+  }
+  await new Promise((resolve) => setTimeout(resolve, 30000))
 }
-await publish(`./dist/${pkg.name}`, pkg.name, version)
+try {
+  await publish(`./dist/${pkg.name}`, pkg.name, version)
+} catch (error) {
+  console.error(`Failed to publish wrapper package ${pkg.name}:`, error)
+  hasError = true
+}
+
+if (hasError) {
+  process.exit(1)
+}
