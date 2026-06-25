@@ -55,9 +55,8 @@ await Bun.file(`./dist/${pkg.name}/package.json`).write(
   ),
 )
 
-await Promise.all(
-  Object.entries(binaries).map(([name, version]) =>
-    publish(`./dist/${name.replace("@opencode-ai/", "")}`, name, version),
-  ),
-)
+for (const [name, binVersion] of Object.entries(binaries)) {
+  await publish(`./dist/${name.replace("@opencode-ai/", "")}`, name, binVersion)
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+}
 await publish(`./dist/${pkg.name}`, pkg.name, version)

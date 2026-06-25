@@ -82,10 +82,10 @@ await Bun.file(`./dist/${pkg.name}/package.json`).write(
   ),
 )
 
-const tasks = Object.entries(binaries).map(async ([name]) => {
-  await publish(`./dist/${name}`, name, binaries[name])
-})
-await Promise.all(tasks)
+for (const [name, binVersion] of Object.entries(binaries)) {
+  await publish(`./dist/${name}`, name, binVersion)
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+}
 await publish(`./dist/${pkg.name}`, `${pkg.name}-ai`, version)
 
 const image = "ghcr.io/anomalyco/opencode"
