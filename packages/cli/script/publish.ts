@@ -25,7 +25,7 @@ async function publish(dir: string, name: string, version: string) {
     console.log(`already packed ${name}@${version} (skipping npm publish on fork repository)`)
     return
   }
-  let attempts = 3
+  let attempts = 5
   while (attempts > 0) {
     try {
       await $`npm publish *.tgz --access public --tag ${Script.channel}`.cwd(dir)
@@ -35,8 +35,9 @@ async function publish(dir: string, name: string, version: string) {
       if (attempts === 0) {
         throw error
       }
-      console.warn(`npm publish failed for ${name}, retrying in 30 seconds... (Attempts remaining: ${attempts})`)
-      await new Promise((resolve) => setTimeout(resolve, 30000))
+      const delay = (5 - attempts) * 60000
+      console.warn(`npm publish failed for ${name}, retrying in ${delay / 1000} seconds... (Attempts remaining: ${attempts})`)
+      await new Promise((resolve) => setTimeout(resolve, delay))
     }
   }
 }
@@ -70,6 +71,6 @@ await Bun.file(`./dist/${pkg.name}/package.json`).write(
 
 for (const [name, binVersion] of Object.entries(binaries)) {
   await publish(`./dist/${name.replace("@opencode-ai/", "")}`, name, binVersion)
-  await new Promise((resolve) => setTimeout(resolve, 2000))
+  await new Promise((resolve) => setTimeout(resolve, 15000))
 }
 await publish(`./dist/${pkg.name}`, pkg.name, version)
