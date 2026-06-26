@@ -1654,8 +1654,8 @@ function ReasoningHeader(props: {
       </Match>
       <Match when={true}>
         <text fg={fg()} wrapMode="none">
-          <Show when={props.toggleable}>
-            <span>{props.open ? "- " : "+ "}</span>
+          <Show when={props.toggleable} fallback={<span>✦ </span>}>
+            <span>{props.open ? "▾ " : "▸ "}</span>
           </Show>
           <span>Thought</span>
           <Show when={props.title || props.duration}>
@@ -2084,7 +2084,7 @@ function Shell(props: ToolProps) {
         </BlockTool>
       </Match>
       <Match when={true}>
-        <InlineTool icon="$" pending="Writing command..." complete={stringValue(props.input.command)} part={props.part}>
+        <InlineTool icon="❯" pending="Writing command..." complete={stringValue(props.input.command)} part={props.part}>
           {stringValue(props.input.command)}
         </InlineTool>
       </Match>
@@ -2117,7 +2117,7 @@ function Write(props: ToolProps) {
       </Match>
       <Match when={true}>
         <InlineTool
-          icon="←"
+          icon="✎"
           pending="Preparing write..."
           complete={stringValue(props.input.filePath)}
           part={props.part}
@@ -2132,7 +2132,7 @@ function Write(props: ToolProps) {
 function Glob(props: ToolProps) {
   const pathFormatter = usePathFormatter()
   return (
-    <InlineTool icon="✱" pending="Finding files..." complete={stringValue(props.input.pattern)} part={props.part}>
+    <InlineTool icon="📂" pending="Finding files..." complete={stringValue(props.input.pattern)} part={props.part}>
       Glob "{stringValue(props.input.pattern)}"{" "}
       <Show when={stringValue(props.input.path)}>in {pathFormatter.format(stringValue(props.input.path))} </Show>
       <Show when={numberValue(props.metadata.count)}>
@@ -2156,7 +2156,7 @@ function Read(props: ToolProps) {
   return (
     <>
       <InlineTool
-        icon="→"
+        icon="📄"
         pending="Reading file..."
         complete={stringValue(props.input.filePath)}
         spinner={isRunning()}
@@ -2180,7 +2180,7 @@ function Read(props: ToolProps) {
 function Grep(props: ToolProps) {
   const pathFormatter = usePathFormatter()
   return (
-    <InlineTool icon="✱" pending="Searching content..." complete={stringValue(props.input.pattern)} part={props.part}>
+    <InlineTool icon="🔍" pending="Searching content..." complete={stringValue(props.input.pattern)} part={props.part}>
       Grep "{stringValue(props.input.pattern)}"{" "}
       <Show when={stringValue(props.input.path)}>in {pathFormatter.format(stringValue(props.input.path))} </Show>
       <Show when={numberValue(props.metadata.matches)}>
@@ -2192,7 +2192,7 @@ function Grep(props: ToolProps) {
 
 function WebFetch(props: ToolProps) {
   return (
-    <InlineTool icon="%" pending="Fetching from the web..." complete={stringValue(props.input.url)} part={props.part}>
+    <InlineTool icon="🌐" pending="Fetching from the web..." complete={stringValue(props.input.url)} part={props.part}>
       WebFetch {stringValue(props.input.url)}
     </InlineTool>
   )
@@ -2200,7 +2200,7 @@ function WebFetch(props: ToolProps) {
 
 function WebSearch(props: ToolProps) {
   return (
-    <InlineTool icon="◈" pending="Searching web..." complete={stringValue(props.input.query)} part={props.part}>
+    <InlineTool icon="🌐" pending="Searching web..." complete={stringValue(props.input.query)} part={props.part}>
       {webSearchProviderLabel(props.metadata.provider)} "{stringValue(props.input.query)}"{" "}
       <Show when={numberValue(props.metadata.numResults)}>({numberValue(props.metadata.numResults)} results)</Show>
     </InlineTool>
@@ -2285,7 +2285,7 @@ function Task(props: ToolProps) {
 
   return (
     <InlineTool
-      icon={props.part.state.status === "completed" ? "✓" : "│"}
+      icon={props.part.state.status === "completed" ? "✔" : "✦"}
       separate={true}
       color={retry() ? theme.error : undefined}
       spinner={isRunning()}
