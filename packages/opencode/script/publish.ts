@@ -110,16 +110,27 @@ await Bun.file(`./dist/${pkg.name}/package.json`).write(
   ),
 )
 
+let hasError = false
 for (const [name, binVersion] of Object.entries(binaries)) {
   const subDirName = name.split("/").pop()!
   try {
     await publish(`./dist/${subDirName}`, name, binVersion)
   } catch (error) {
     console.error(`Failed to publish binary package ${name}:`, error)
+    hasError = true
   }
-  await new Promise((resolve) => setTimeout(resolve, 15000))
+  await new Promise((resolve) => setTimeout(resolve, 30000))
 }
-await publish(`./dist/${pkg.name}`, `${pkg.name}-ai`, version)
+try {
+  await publish(`./dist/${pkg.name}`, `${pkg.name}-ai`, version)
+} catch (error) {
+  console.error(`Failed to publish wrapper package ${pkg.name}-ai:`, error)
+  hasError = true
+}
+
+if (hasError) {
+  process.exit(1)
+}
 
 const image = "ghcr.io/anomalyco/opencode"
 const platforms = "linux/amd64,linux/arm64"
