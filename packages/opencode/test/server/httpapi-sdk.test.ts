@@ -41,8 +41,8 @@ const it = testEffect(
 )
 
 const original = {
-  OPENCODE_SERVER_PASSWORD: Flag.OPENCODE_SERVER_PASSWORD,
-  OPENCODE_SERVER_USERNAME: Flag.OPENCODE_SERVER_USERNAME,
+  BIGMANCODE_SERVER_PASSWORD: Flag.BIGMANCODE_SERVER_PASSWORD,
+  BIGMANCODE_SERVER_USERNAME: Flag.BIGMANCODE_SERVER_USERNAME,
 }
 
 type ServerPath = "default" | "raw"
@@ -89,8 +89,8 @@ function serverFetch(
   return HttpServer.HttpServer.use((server) =>
     Effect.sync(() => {
       void serverPath
-      Flag.OPENCODE_SERVER_PASSWORD = input?.password
-      Flag.OPENCODE_SERVER_USERNAME = input?.username
+      Flag.BIGMANCODE_SERVER_PASSWORD = input?.password
+      Flag.BIGMANCODE_SERVER_USERNAME = input?.username
       const baseUrl = HttpServer.formatAddress(server.address)
       return Object.assign(
         async (request: RequestInfo | URL, init?: RequestInit) => {
@@ -329,8 +329,8 @@ function seedMessage(directory: string, sessionID: string) {
 }
 
 afterEach(async () => {
-  Flag.OPENCODE_SERVER_PASSWORD = original.OPENCODE_SERVER_PASSWORD
-  Flag.OPENCODE_SERVER_USERNAME = original.OPENCODE_SERVER_USERNAME
+  Flag.BIGMANCODE_SERVER_PASSWORD = original.BIGMANCODE_SERVER_PASSWORD
+  Flag.BIGMANCODE_SERVER_USERNAME = original.BIGMANCODE_SERVER_USERNAME
   await disposeAllInstances()
   await resetDatabase()
 })
@@ -403,8 +403,8 @@ describe("HttpApi SDK", () => {
         expect(url.searchParams.get("workspace")).toBe(workspaceID)
         expect(url.searchParams.get("location[directory]")).toBe(directory)
         expect(url.searchParams.get("location[workspace]")).toBe(workspaceID)
-        expect(request!.headers.has("x-opencode-directory")).toBe(false)
-        expect(request!.headers.has("x-opencode-workspace")).toBe(false)
+        expect(request!.headers.has("x-bigmancode-directory")).toBe(false)
+        expect(request!.headers.has("x-bigmancode-workspace")).toBe(false)
       }),
     ),
   )

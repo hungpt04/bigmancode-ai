@@ -9,11 +9,11 @@ import { Effect, Scope } from "effect"
  */
 export function withFixedWorkspaceID(id: WorkspaceV2.ID): Effect.Effect<void, never, Scope.Scope> {
   return Effect.gen(function* () {
-    const previous = Flag.OPENCODE_WORKSPACE_ID
-    Flag.OPENCODE_WORKSPACE_ID = id
+    const previous = Flag.BIGMANCODE_WORKSPACE_ID
+    Flag.BIGMANCODE_WORKSPACE_ID = id
     yield* Effect.addFinalizer(() =>
       Effect.sync(() => {
-        Flag.OPENCODE_WORKSPACE_ID = previous
+        Flag.BIGMANCODE_WORKSPACE_ID = previous
       }),
     )
   })

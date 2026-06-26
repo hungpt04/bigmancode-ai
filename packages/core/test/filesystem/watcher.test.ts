@@ -29,8 +29,8 @@ const configLayer = Layer.succeed(
 
 const flagsLayer = ConfigProvider.layer(
   ConfigProvider.fromUnknown({
-    OPENCODE_EXPERIMENTAL_FILEWATCHER: "true",
-    OPENCODE_EXPERIMENTAL_DISABLE_FILEWATCHER: "false",
+    BIGMANCODE_EXPERIMENTAL_FILEWATCHER: "true",
+    BIGMANCODE_EXPERIMENTAL_DISABLE_FILEWATCHER: "false",
   }),
 )
 

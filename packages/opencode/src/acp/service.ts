@@ -99,9 +99,9 @@ export function make(input: {
     if (params.clientCapabilities?._meta?.["terminal-auth"] === true) {
       authMethod._meta = {
         "terminal-auth": {
-          command: "opencode",
+          command: "bigmancode",
           args: ["auth", "login"],
-          label: "OpenCode Login",
+          label: "BigManCode Login",
         },
       }
     }

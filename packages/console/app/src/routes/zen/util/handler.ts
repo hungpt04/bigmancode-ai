@@ -102,10 +102,10 @@ export async function handler(
     const ip = rawIp.includes(":") ? rawIp.split(":").slice(0, 4).join(":") : rawIp
     const rawZenApiKey = opts.parseApiKey(input.request.headers)
     const zenApiKey = rawZenApiKey === "public" ? undefined : rawZenApiKey
-    const sessionId = input.request.headers.get("x-opencode-session") ?? ""
-    const requestId = input.request.headers.get("x-opencode-request") ?? ""
-    const ocClient = input.request.headers.get("x-opencode-client") ?? ""
-    const projectId = input.request.headers.get("x-opencode-project") ?? ""
+    const sessionId = input.request.headers.get("x-bigmancode-session") ?? ""
+    const requestId = input.request.headers.get("x-bigmancode-request") ?? ""
+    const ocClient = input.request.headers.get("x-bigmancode-client") ?? ""
+    const projectId = input.request.headers.get("x-bigmancode-project") ?? ""
     const userAgent = input.request.headers.get("user-agent") ?? ""
     logger.metric({
       is_stream: isStream,
@@ -204,10 +204,10 @@ export async function handler(
           })
           headers.delete("host")
           headers.delete("content-length")
-          headers.delete("x-opencode-request")
-          headers.delete("x-opencode-session")
-          headers.delete("x-opencode-project")
-          headers.delete("x-opencode-client")
+          headers.delete("x-bigmancode-request")
+          headers.delete("x-bigmancode-session")
+          headers.delete("x-bigmancode-project")
+          headers.delete("x-bigmancode-client")
           return headers
         })(),
         body: reqBody,

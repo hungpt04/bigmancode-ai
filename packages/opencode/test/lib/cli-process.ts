@@ -59,19 +59,19 @@ function forkStderrDrain(stream: ReadableStream<Uint8Array>, into: string[]) {
 
 function isolatedEnv(home: string, configJson: string): Record<string, string> {
   return {
-    OPENCODE_TEST_HOME: home,
+    BIGMANCODE_TEST_HOME: home,
     HOME: home,
     XDG_CONFIG_HOME: path.join(home, ".config"),
     XDG_DATA_HOME: path.join(home, ".local/share"),
     XDG_STATE_HOME: path.join(home, ".local/state"),
     XDG_CACHE_HOME: path.join(home, ".cache"),
-    OPENCODE_CONFIG_CONTENT: configJson,
-    OPENCODE_DISABLE_PROJECT_CONFIG: "1",
-    OPENCODE_PURE: "1",
-    OPENCODE_DISABLE_AUTOUPDATE: "1",
-    OPENCODE_DISABLE_AUTOCOMPACT: "1",
-    OPENCODE_DISABLE_MODELS_FETCH: "1",
-    OPENCODE_AUTH_CONTENT: "{}",
+    BIGMANCODE_CONFIG_CONTENT: configJson,
+    BIGMANCODE_DISABLE_PROJECT_CONFIG: "1",
+    BIGMANCODE_PURE: "1",
+    BIGMANCODE_DISABLE_AUTOUPDATE: "1",
+    BIGMANCODE_DISABLE_AUTOCOMPACT: "1",
+    BIGMANCODE_DISABLE_MODELS_FETCH: "1",
+    BIGMANCODE_AUTH_CONTENT: "{}",
   }
 }
 
@@ -264,7 +264,7 @@ export function withCliFixture<A, E>(
         ...opts,
         env: {
           ...opts.env,
-          OPENCODE_CONFIG_CONTENT: JSON.stringify({
+          BIGMANCODE_CONFIG_CONTENT: JSON.stringify({
             ...testProviderConfig(llm.url),
             permission: opts.permission,
           }),
