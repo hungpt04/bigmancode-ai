@@ -93,10 +93,10 @@
   --text-mix-blend-mode: multiply;
 
   /* OC-2 fallback variables (light) */
-  --background-base: #f8f8f8;
-  --background-weak: #f3f3f3;
-  --background-strong: #fcfcfc;
-  --background-stronger: #fcfcfc;
+  --background-base: #fafafa;
+  --background-weak: #f4f4f5;
+  --background-strong: #fafafa;
+  --background-stronger: #ffffff;
   --surface-base: rgba(0, 0, 0, 0.031);
   --base: rgba(0, 0, 0, 0.034);
   --surface-base-hover: rgba(0, 0, 0, 0.059);
@@ -353,10 +353,10 @@
     --text-mix-blend-mode: plus-lighter;
 
     /* OC-2 fallback variables (dark) */
-    --background-base: #101010;
-    --background-weak: #1e1e1e;
-    --background-strong: #121212;
-    --background-stronger: #151515;
+    --background-base: #09090b;
+    --background-weak: #18181b;
+    --background-strong: #09090b;
+    --background-stronger: #18181b;
     --surface-base: rgba(255, 255, 255, 0.031);
     --base: rgba(255, 255, 255, 0.034);
     --surface-base-hover: rgba(255, 255, 255, 0.039);
