@@ -4,9 +4,9 @@ import type { Configuration } from "electron-builder"
 const legacyDesktopEntry = "resources/linux/opencode-desktop.desktop"
 
 const channels = [
-  { channel: "dev", appId: "ai.opencode.desktop.dev" },
-  { channel: "beta", appId: "ai.opencode.desktop.beta" },
-  { channel: "prod", appId: "ai.opencode.desktop" },
+  { channel: "dev", appId: "ai.bigmancode.desktop.dev" },
+  { channel: "beta", appId: "ai.bigmancode.desktop.beta" },
+  { channel: "prod", appId: "ai.bigmancode.desktop" },
 ] as const
 
 for (const channel of channels) {
@@ -37,8 +37,8 @@ test("keeps a hidden prod launcher for old Linux pins", async () => {
   if (previous === undefined) delete process.env.BIGMANCODE_CHANNEL
   else process.env.BIGMANCODE_CHANNEL = previous
 
-  expect(config.deb?.fpm?.[0]).toEndWith(`${legacyDesktopEntry}=/usr/share/applications/opencode-desktop.desktop`)
-  expect(config.rpm?.fpm?.[0]).toEndWith(`${legacyDesktopEntry}=/usr/share/applications/opencode-desktop.desktop`)
+  expect(config.deb?.fpm?.[0]?.replace(/\\/g, "/")).toEndWith(`${legacyDesktopEntry}=/usr/share/applications/opencode-desktop.desktop`)
+  expect(config.rpm?.fpm?.[0]?.replace(/\\/g, "/")).toEndWith(`${legacyDesktopEntry}=/usr/share/applications/opencode-desktop.desktop`)
 
   const desktop = await Bun.file(legacyDesktopEntry).text()
   expect(desktop).toContain("Exec=/opt/OpenCode/ai.opencode.desktop %U")

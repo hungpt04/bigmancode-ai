@@ -33,13 +33,13 @@ const channel = (() => {
 })()
 
 const APP_IDS = {
-  dev: "ai.opencode.desktop.dev",
-  beta: "ai.opencode.desktop.beta",
-  prod: "ai.opencode.desktop",
+  dev: "ai.bigmancode.desktop.dev",
+  beta: "ai.bigmancode.desktop.beta",
+  prod: "ai.bigmancode.desktop",
 } as const
 
 const getBase = (appId: string): Configuration => ({
-  artifactName: "opencode-desktop-${os}-${arch}.${ext}",
+  artifactName: "bigmancode-desktop-${os}-${arch}.${ext}",
   directories: {
     output: "dist",
     buildResources: "resources",
@@ -74,8 +74,8 @@ const getBase = (appId: string): Configuration => ({
     sign: !!process.env.CSC_LINK,
   },
   protocols: {
-    name: "OpenCode",
-    schemes: ["opencode"],
+    name: "BIGMAN Code",
+    schemes: ["bigmancode"],
   },
   win: {
     icon: `resources/icons/icon.ico`,
@@ -115,29 +115,29 @@ function getConfig() {
       return {
         ...base,
         appId,
-        productName: "OpenCode Dev",
-        rpm: { packageName: "opencode-dev" },
+        productName: "BIGMAN Code Dev",
+        rpm: { packageName: "bigmancode-dev" },
       }
     }
     case "beta": {
       return {
         ...base,
         appId,
-        productName: "OpenCode Beta",
-        protocols: { name: "OpenCode Beta", schemes: ["opencode"] },
-        publish: { provider: "github", owner: "anomalyco", repo: "opencode-beta", channel: "latest" },
-        rpm: { packageName: "opencode-beta" },
+        productName: "BIGMAN Code Beta",
+        protocols: { name: "BIGMAN Code Beta", schemes: ["bigmancode"] },
+        publish: { provider: "github", owner: "hungpt04", repo: "bigmancode-ai-beta", channel: "latest" },
+        rpm: { packageName: "bigmancode-beta" },
       }
     }
     case "prod": {
       return {
         ...base,
         appId,
-        productName: "OpenCode",
-        protocols: { name: "OpenCode", schemes: ["opencode"] },
-        publish: { provider: "github", owner: "anomalyco", repo: "opencode", channel: "latest" },
+        productName: "BIGMAN Code",
+        protocols: { name: "BIGMAN Code", schemes: ["bigmancode"] },
+        publish: { provider: "github", owner: "hungpt04", repo: "bigmancode-ai", channel: "latest" },
         deb: { fpm: [legacyDesktopEntryFpm] },
-        rpm: { packageName: "opencode", fpm: [legacyDesktopEntryFpm] },
+        rpm: { packageName: "bigmancode", fpm: [legacyDesktopEntryFpm] },
       }
     }
   }

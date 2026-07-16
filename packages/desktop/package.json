@@ -1,12 +1,12 @@
 {
-  "name": "@opencode-ai/desktop",
+  "name": "@bigmancode/desktop",
   "private": true,
   "version": "1.17.9",
   "type": "module",
   "license": "MIT",
-  "homepage": "https://opencode.ai",
+  "homepage": "https://github.com/hungpt04/bigmancode-ai",
   "author": {
-    "name": "OpenCode",
+    "name": "BigMan Code",
     "email": "hello@opencode.ai"
   },
   "scripts": {
